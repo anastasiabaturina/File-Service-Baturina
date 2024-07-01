@@ -1,9 +1,9 @@
 ﻿using DotNetEnv;
-using File_Service.Service;
-using File_Service;
+using FileService.Service;
 using Microsoft.EntityFrameworkCore;
 using Scrypt;
-using Servise_file.Service;
+
+namespace FileService;
 
 public class Startup
 {

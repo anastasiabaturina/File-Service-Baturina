@@ -1,4 +1,6 @@
-﻿public class FileEntity
+﻿namespace FileService;
+
+public class FileEntity
 {
     public Guid Id { get; set; }
     public string UniqueName { get; set; }

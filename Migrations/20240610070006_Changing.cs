@@ -2,7 +2,7 @@
 
 #nullable disable
 
-namespace File_Service.Migrations
+namespace FileService.Migrations
 {
     /// <inheritdoc />
     public partial class Changing : Migration

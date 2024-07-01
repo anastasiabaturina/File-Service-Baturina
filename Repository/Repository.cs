@@ -1,51 +1,50 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-namespace File_Service
+namespace FileService;
+
+public class Repository : IRepository
 {
-    public class Repository : IRepository
+    private readonly Context _context;
+
+    public Repository(Context context)
     {
-        private readonly Context _context;
+        _context = context;
+    }
 
-        public Repository(Context context)
+    public async Task SaveFile(FileEntity file)
+    {
+        await _context.File.AddAsync(file);
+        await _context.SaveChangesAsync(); 
+    }
+
+    public async Task<string> GetHashPassword(string uniqueName)
+    {
+        var file = await _context.File.FirstOrDefaultAsync(x => x.UniqueName == uniqueName);
+
+        if (file == null)
         {
-            _context = context;
+            throw new FileNotFoundException();
         }
 
-        public async Task SaveFile(FileEntity file)
+        return file.Password;
+    }
+
+    public async Task DeleteFile(string uniqueName)
+    {
+        var file = await _context.File.FirstOrDefaultAsync(x => x.UniqueName == uniqueName);
+
+        if (file == null)
         {
-            await _context.File.AddAsync(file);
-            await _context.SaveChangesAsync(); 
+            throw new FileNotFoundException();
         }
 
-        public async Task<string> GetHashPassword(string uniqueName)
-        {
-            var file = await _context.File.FirstOrDefaultAsync(x => x.UniqueName == uniqueName);
+        _context.File.Remove(file);
+        await _context.SaveChangesAsync();
+    }
 
-            if (file == null)
-            {
-                throw new FileNotFoundException();
-            }
-
-            return file.Password;
-        }
-
-        public async Task DeleteFile(string uniqueName)
-        {
-            var file = await _context.File.FirstOrDefaultAsync(x => x.UniqueName == uniqueName);
-
-            if (file == null)
-            {
-                throw new FileNotFoundException();
-            }
-
-            _context.File.Remove(file);
-            await _context.SaveChangesAsync();
-        }
-
-        public async Task DeletionByDate()
-        {
-            _context.File.RemoveRange(_context.File.Where(f => f.UploadDateTime < DateTime.UtcNow.AddDays(-1)));
-            await _context.SaveChangesAsync();
-        }
+    public async Task DeletionByDate()
+    {
+        _context.File.RemoveRange(_context.File.Where(f => f.UploadDateTime < DateTime.UtcNow.AddDays(-1)));
+        await _context.SaveChangesAsync();
     }
 }

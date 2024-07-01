@@ -1,10 +1,9 @@
-﻿namespace File_Service
+﻿namespace FileService;
+
+public interface IRepository
 {
-    public interface IRepository
-    {
-        Task SaveFile(FileEntity file);
-        Task<string> GetHashPassword(string uniqueName);
-        Task DeleteFile(string uniqueName);
-        Task DeletionByDate();
-    }
+    Task SaveFile(FileEntity file);
+    Task<string> GetHashPassword(string uniqueName);
+    Task DeleteFile(string uniqueName);
+    Task DeletionByDate();
 }

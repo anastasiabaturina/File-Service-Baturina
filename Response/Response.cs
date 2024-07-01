@@ -1,4 +1,6 @@
-﻿public class Response<T>
+﻿namespace FileService;
+
+public class Response<T>
 {
     public T? Data { get; set; }
     public int StatusCode { get; set; }

@@ -1,10 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace File_Service
+namespace FileService;
+
+public class UploadFileDto
 {
-    public class UploadFileDto
-    {
-        public string Password { get; set; }
-        public IFormFile File { get; set; }
-    }
+    public string Password { get; set; }
+    public IFormFile File { get; set; }
 }

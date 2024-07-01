@@ -1,15 +1,14 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-namespace File_Service.Service
+namespace FileService.Service;
+
+public interface IServiceFile
 {
-    public interface IServiceFile
-    {
-        Task<string> SaveFile(UploadFileDto uploadFile);
+    Task<string> SaveFile(UploadFileDto uploadFile);
 
-        Task<FileStreamResult> GetFileAsync(string fileName);
+    Task<FileStreamResult> GetFileAsync(string fileName);
 
-        Task DeleteFile(string uniqueName, string password);
+    Task DeleteFile(string uniqueName, string password);
 
-        Task AutoDeleteFile();
-    }
+    Task AutoDeleteFile();
 }

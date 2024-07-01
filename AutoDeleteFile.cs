@@ -1,38 +1,37 @@
-﻿using File_Service.Service;
+﻿using FileService.Service;
 
-namespace File_Service
+namespace FileService;
+
+public class AutoDeleteFile : IHostedService
 {
-    public class AutoDeleteFile : IHostedService
+    private readonly IServiceScopeFactory _serviceScopeFactory;
+
+    public AutoDeleteFile(IServiceScopeFactory serviceScopeFactory)
     {
-        private readonly IServiceScopeFactory _serviceScopeFactory;
+        _serviceScopeFactory = serviceScopeFactory;
+    }
 
-        public AutoDeleteFile(IServiceScopeFactory serviceScopeFactory)
+    private Timer? _timer;
+
+    public Task StartAsync(CancellationToken cancellationToken)
+    {
+        _timer = new Timer(async state =>
         {
-            _serviceScopeFactory = serviceScopeFactory;
-        }
+            using var scope = _serviceScopeFactory.CreateScope();
+            var serviceFile = scope.ServiceProvider.GetRequiredService<IServiceFile>();
+            await serviceFile.AutoDeleteFile();
+        }, null, TimeSpan.Zero, TimeSpan.FromSeconds(5));
 
-        private Timer? _timer;
+        return Task.CompletedTask;
+    }
 
-        public Task StartAsync(CancellationToken cancellationToken)
+    public Task StopAsync(CancellationToken cancellationToken)
+    {
+        if (_timer != null)
         {
-            _timer = new Timer(async state =>
-            {
-                using var scope = _serviceScopeFactory.CreateScope();
-                var serviceFile = scope.ServiceProvider.GetRequiredService<IServiceFile>();
-                await serviceFile.AutoDeleteFile();
-            }, null, TimeSpan.Zero, TimeSpan.FromSeconds(5));
-
-            return Task.CompletedTask;
+            _timer.Change(Timeout.Infinite, 0);
+            _timer = null;
         }
-
-        public Task StopAsync(CancellationToken cancellationToken)
-        {
-            if (_timer != null)
-            {
-                _timer.Change(Timeout.Infinite, 0);
-                _timer = null;
-            }
-            return Task.CompletedTask;
-        }
+        return Task.CompletedTask;
     }
 }
