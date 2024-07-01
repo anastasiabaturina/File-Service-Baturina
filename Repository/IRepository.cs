@@ -2,7 +2,7 @@
 
 public interface IRepository
 {
-    Task SaveFile(FileEntity file);
+    Task SaveFile(File file);
     Task<string> GetHashPassword(string uniqueName);
     Task DeleteFile(string uniqueName);
     Task DeletionByDate();

@@ -23,7 +23,7 @@ public class FileService : IFileService
         var uniqueName = $"{Cuid.NewCuid()}_{uploadFile.File.FileName}";
         var path = Path.Combine(_webHostEnvironment.WebRootPath, uniqueName);
 
-        var fileEntity = new FileEntity
+        var fileEntity = new File
         {
             Id = new Guid(),
             UniqueName = uniqueName,
@@ -51,7 +51,7 @@ public class FileService : IFileService
 
         var filePath = Path.Combine(_webHostEnvironment.WebRootPath, fileName);
 
-        if (!File.Exists(filePath))
+        if (!System.IO.File.Exists(filePath))
         {
             throw new FileNotFoundException();
         }
@@ -79,7 +79,7 @@ public class FileService : IFileService
 
         var filePath = Path.Combine(_webHostEnvironment.WebRootPath, uniqueName);
 
-        if (!File.Exists(filePath))
+        if (!System.IO.File.Exists(filePath))
         {
             throw new FileNotFoundException();
         }
@@ -93,7 +93,7 @@ public class FileService : IFileService
 
         await _repository.DeleteFile(uniqueName);
 
-        File.Delete(filePath);
+        System.IO.File.Delete(filePath);
     }
 
     public async Task AutoDeleteFile()
@@ -106,7 +106,7 @@ public class FileService : IFileService
 
             if (fileInfo.CreationTime < DateTime.UtcNow.AddDays(-1))
             {
-                File.Delete(filePath);
+                System.IO.File.Delete(filePath);
             }
         }
 

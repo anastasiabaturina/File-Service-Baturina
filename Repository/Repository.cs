@@ -11,7 +11,7 @@ public class Repository : IRepository
         _context = context;
     }
 
-    public async Task SaveFile(FileEntity file)
+    public async Task SaveFile(File file)
     {
         await _context.File.AddAsync(file);
         await _context.SaveChangesAsync(); 
