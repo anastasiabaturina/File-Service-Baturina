@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace FileService.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialMigration : Migration
+    public partial class AddFilesTable : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -16,7 +16,7 @@ namespace FileService.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    UniqueName = table.Column<string>(type: "text", nullable: true),
+                    UniqueName = table.Column<string>(type: "text", nullable: false),
                     Path = table.Column<string>(type: "text", nullable: true),
                     UploadDateTime = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     Password = table.Column<string>(type: "text", nullable: true)
