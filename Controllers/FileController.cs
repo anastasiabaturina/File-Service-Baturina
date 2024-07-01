@@ -16,11 +16,11 @@ public class FileController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> UploadFile([FromForm] UploadFileDto uploadFile)
+    public async Task<IActionResult> UploadFile([FromForm] UploadFileRequest uploadFileRequest)
     {
         var response = new Response<string>
         {              
-            Data = await _fileService.SaveFile(uploadFile),
+            Data = await _fileService.SaveFile(uploadFileRequest),
             StatusCode = StatusCodes.Status201Created,
             Success = true,
         };

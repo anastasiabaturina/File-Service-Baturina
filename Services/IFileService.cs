@@ -4,7 +4,7 @@ namespace FileService.Service;
 
 public interface IFileService
 {
-    Task<string> SaveFile(UploadFileDto uploadFile);
+    Task<string> SaveFile(UploadFileRequest uploadFile);
 
     Task<FileStreamResult> GetFileAsync(string fileName);
 

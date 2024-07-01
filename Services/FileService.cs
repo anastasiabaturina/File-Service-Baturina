@@ -18,7 +18,7 @@ public class FileService : IFileService
         _scryptEncoder = scryptEncoder;
     }
 
-    public async Task<string> SaveFile(UploadFileDto uploadFile)
+    public async Task<string> SaveFile(UploadFileRequest uploadFile)
     {
         var uniqueName = $"{Cuid.NewCuid()}_{uploadFile.File.FileName}";
         var path = Path.Combine(_webHostEnvironment.WebRootPath, uniqueName);
