@@ -8,11 +8,11 @@ namespace FileService.Controllers;
 [Route("File")]
 public class FileController : ControllerBase
 {
-    private readonly IServiceFile _serviceFile;
+    private readonly IFileService _fileService;
 
-    public FileController(IServiceFile serviceFile)
+    public FileController(IFileService fileService)
     {
-        _serviceFile = serviceFile;
+        _fileService = fileService;
     }
 
     [HttpPost]
@@ -20,7 +20,7 @@ public class FileController : ControllerBase
     {
         var response = new Response<string>
         {              
-            Data = await _serviceFile.SaveFile(uploadFile),
+            Data = await _fileService.SaveFile(uploadFile),
             StatusCode = StatusCodes.Status201Created,
             Success = true,
         };
@@ -33,7 +33,7 @@ public class FileController : ControllerBase
     { 
         try
         {
-            return await _serviceFile.GetFileAsync(fileName);
+            return await _fileService.GetFileAsync(fileName);
         }
 
         catch (ArgumentException ex)
@@ -66,7 +66,7 @@ public class FileController : ControllerBase
     {
         try
         {
-            await _serviceFile.DeleteFile(uniqueName, password);
+            await _fileService.DeleteFile(uniqueName, password);
 
             var response = new Response<string>
             {

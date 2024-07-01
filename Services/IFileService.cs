@@ -2,7 +2,7 @@
 
 namespace FileService.Service;
 
-public interface IServiceFile
+public interface IFileService
 {
     Task<string> SaveFile(UploadFileDto uploadFile);
 

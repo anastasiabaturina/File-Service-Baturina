@@ -5,13 +5,13 @@ using Visus.Cuid;
 
 namespace FileService.Service;
 
-public class ServiceFile: IServiceFile
+public class FileService : IFileService
 {
     private readonly IRepository _repository;
     private readonly IWebHostEnvironment _webHostEnvironment;
     private readonly ScryptEncoder _scryptEncoder;
 
-    public ServiceFile(IRepository repository, IWebHostEnvironment webHostEnvironment, ScryptEncoder scryptEncoder)
+    public FileService(IRepository repository, IWebHostEnvironment webHostEnvironment, ScryptEncoder scryptEncoder)
     {
         _repository = repository;
         _webHostEnvironment = webHostEnvironment;

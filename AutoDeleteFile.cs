@@ -18,8 +18,8 @@ public class AutoDeleteFile : IHostedService
         _timer = new Timer(async state =>
         {
             using var scope = _serviceScopeFactory.CreateScope();
-            var serviceFile = scope.ServiceProvider.GetRequiredService<IServiceFile>();
-            await serviceFile.AutoDeleteFile();
+            var fileService = scope.ServiceProvider.GetRequiredService<IFileService>();
+            await fileService.AutoDeleteFile();
         }, null, TimeSpan.Zero, TimeSpan.FromSeconds(5));
 
         return Task.CompletedTask;
