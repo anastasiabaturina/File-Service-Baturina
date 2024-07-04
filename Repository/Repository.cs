@@ -6,10 +6,10 @@ namespace FileService;
 
 public class Repository : IRepository
 {
-    private readonly Context _context;
+    private readonly DocumentContext _context;
     private readonly int _timeInterval;
 
-    public Repository(Context context, IConfiguration configuration)
+    public Repository(DocumentContext context, IConfiguration configuration)
     {
         _context = context;
         _timeInterval = configuration.GetValue<int>("Time:Hour");

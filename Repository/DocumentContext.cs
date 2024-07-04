@@ -3,9 +3,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FileService;
 
-public class Context : DbContext
+public class DocumentContext : DbContext
 {
-    public Context(DbContextOptions<Context> options) : base(options)
+    public DocumentContext(DbContextOptions<DocumentContext> options) : base(options)
     {}
     public DbSet<Document> Files { get; set; }
 }

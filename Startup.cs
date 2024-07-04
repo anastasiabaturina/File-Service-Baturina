@@ -22,7 +22,7 @@ public class Startup
         services.AddControllers();
         services.AddEndpointsApiExplorer();
         services.AddSwaggerGen();
-        services.AddDbContext<Context>(options => options.UseNpgsql(connection));
+        services.AddDbContext<DocumentContext>(options => options.UseNpgsql(connection));
         services.AddScoped<IFileService, Service.FileService>();
         services.AddScoped<IRepository, Repository>();
         services.AddSingleton<ScryptEncoder>();
