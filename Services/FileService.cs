@@ -4,6 +4,7 @@ using Scrypt;
 using System.Security.Authentication;
 using Visus.Cuid;
 using FileService.Models.Request;
+using FileService.Models.UploadFileDto;
 
 namespace FileService.Service;
 
@@ -20,7 +21,7 @@ public class FileService : IFileService
         _scryptEncoder = scryptEncoder;
     }
 
-    public async Task<string> SaveFile(UploadFileRequest uploadFile)
+    public async Task<string> SaveFile(UploadFileDto uploadFile)
     {
         var uniqueName = $"{Cuid.NewCuid()}_{uploadFile.File.FileName}";
         var path = Path.Combine(_webHostEnvironment.WebRootPath, uniqueName);

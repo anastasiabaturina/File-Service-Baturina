@@ -1,4 +1,5 @@
 ﻿using DotNetEnv;
+using FileService.Automapper;
 using FileService.Service;
 using Microsoft.EntityFrameworkCore;
 using Scrypt;
@@ -26,6 +27,7 @@ public class Startup
         services.AddScoped<IRepository, Repository>();
         services.AddSingleton<ScryptEncoder>();
         services.AddHostedService<AutoDeleteFile>();
+        services.AddAutoMapper(typeof(MapFile));
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

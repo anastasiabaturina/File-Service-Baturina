@@ -1,5 +1,7 @@
-﻿using FileService.Models.Request;
+﻿using AutoMapper;
+using FileService.Models.Request;
 using FileService.Models.Response;
+using FileService.Models.UploadFileDto;
 using FileService.Service;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Authentication;
@@ -11,18 +13,23 @@ namespace FileService.Controllers;
 public class FileController : ControllerBase
 {
     private readonly IFileService _fileService;
+    private readonly IMapper _mapper;
 
-    public FileController(IFileService fileService)
+    public FileController(IFileService fileService, IMapper mapper)
     {
         _fileService = fileService;
+        _mapper = mapper;
     }
 
     [HttpPost]
     public async Task<IActionResult> UploadFile([FromForm] UploadFileRequest uploadFileRequest)
     {
+        var uploadFileDto = _mapper.Map<UploadFileDto>(uploadFileRequest);
+        var uniqueFileName = await _fileService.SaveFile(uploadFileDto);
+
         var response = new Response<string>
         {              
-            Data = await _fileService.SaveFile(uploadFileRequest),
+            Data = $"Имя файла:{uniqueFileName}"
         };
 
         return CreatedAtAction(nameof(UploadFile), response);
