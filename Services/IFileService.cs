@@ -1,4 +1,5 @@
-﻿using FileService.Models.Request;
+﻿using FileService.Models.Dto_s;
+using FileService.Models.Request;
 using FileService.Models.UploadFileDto;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,7 +11,7 @@ public interface IFileService
 
     Task<FileStreamResult> GetFileAsync(string fileName);
 
-    Task DeleteFile(string uniqueName, string password);
+    Task<bool> DeleteFile(DeleteFileDto deleteFileDto);
 
     Task AutoDeleteFile();
 }

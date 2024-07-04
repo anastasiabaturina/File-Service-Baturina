@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using FileService.Models.Dto_s;
 using FileService.Models.Request;
 using FileService.Models.Response;
 using FileService.Models.UploadFileDto;
@@ -29,7 +30,7 @@ public class FileController : ControllerBase
 
         var response = new Response<string>
         {              
-            Data = $"Имя файла:{uniqueFileName}"
+            Data = $"File name:{uniqueFileName}"
         };
 
         return CreatedAtAction(nameof(UploadFile), response);
@@ -65,48 +66,47 @@ public class FileController : ControllerBase
     }
 
     [HttpDelete]
-    public async Task<IActionResult> DeleteFile(string uniqueName, string password)
+    public async Task<IActionResult> DeleteFile(DeleteFileRequest deleteFileRequest)
     {
-        try
+        var deleteFileDto = _mapper.Map<DeleteFileDto>(deleteFileRequest);
+        await _fileService.DeleteFile(deleteFileDto);
+
+        var response = new Response<string>
         {
-            await _fileService.DeleteFile(uniqueName, password);
+            Data = $"{deleteFileRequest.UniqueName} was deleted"
+        };
 
-            var response = new Response<string>
-            {
-                Data = "Файл успешно удален",
-            };
-
-            return Ok(response);
-        }
-
-        catch (ArgumentException ex)
-        {
-            var response = new Response<string>
-            {
-                Data = ex.Message,
-            };
-
-            return BadRequest();
-        }
-
-        catch (FileNotFoundException)
-        {
-            var response = new Response<string>
-            {
-                Data = "Файл не найден",
-            };
-
-            return NotFound(response);
-        }
-
-        catch (AuthenticationException)
-        {
-            var response = new Response<string>
-            {
-                Data = "Неверный пароль",
-            };
-
-            return Unauthorized(response);
-        }
+        return Ok(response);
     }
+
+    //catch (ArgumentException ex)
+    //{
+    //    var response = new Response<string>
+    //    {
+    //        Data = ex.Message,
+    //    };
+
+    //    return BadRequest();
+    //}
+
+    //catch (FileNotFoundException)
+    //{
+    //    var response = new Response<string>
+    //    {
+    //        Data = "Файл не найден",
+    //    };
+
+    //    return NotFound(response);
+    //}
+
+    //catch (AuthenticationException)
+    //{
+    //    var response = new Response<string>
+    //    {
+    //        Data = "Неверный пароль",
+    //    };
+
+    //    return Unauthorized(response);
+    //}
+}
 }

@@ -5,6 +5,7 @@ using System.Security.Authentication;
 using Visus.Cuid;
 using FileService.Models.Request;
 using FileService.Models.UploadFileDto;
+using FileService.Models.Dto_s;
 
 namespace FileService.Service;
 
@@ -34,7 +35,7 @@ public class FileService : IFileService
             Password = _scryptEncoder.Encode(uploadFile.Password)
         };
 
-        await _repository.SaveFile(file);
+        await _repository.Save(file);
 
         await using (var stream = new FileStream(path, FileMode.Create, FileAccess.Write, FileShare.Read, 4096, useAsync: true))
         {
@@ -67,51 +68,41 @@ public class FileService : IFileService
         }
     }
 
-    public async Task DeleteFile(string uniqueName, string password)
-    {
-        if (string.IsNullOrEmpty(uniqueName))
-        {
-            throw new ArgumentException("Имя файла не может быть пустым", nameof(uniqueName));
-        }
+    //public async Task<bool> DeleteFile(DeleteFileDto deleteFileDto)
+    //{
+        //var filePath = Path.Combine(_webHostEnvironment.WebRootPath, uniqueName);
 
-        if (string.IsNullOrEmpty(password))
-        {
-            throw new ArgumentException("Пароль не может быть пустым", nameof(password));
-        }
+        //if (!System.IO.File.Exists(filePath))
+        //{
+        //    throw new FileNotFoundException();
+        //}
 
-        var filePath = Path.Combine(_webHostEnvironment.WebRootPath, uniqueName);
+        //var passwordHash = await _repository.GetHashPassword(uniqueName);
 
-        if (!System.IO.File.Exists(filePath))
-        {
-            throw new FileNotFoundException();
-        }
+        //if (!_scryptEncoder.Compare(password, passwordHash))
+        //{
+        //    throw new AuthenticationException();
+        //}
 
-        var passwordHash = await _repository.GetHashPassword(uniqueName);
+        //await _repository.DeleteFile(uniqueName);
 
-        if (!_scryptEncoder.Compare(password, passwordHash))
-        {
-            throw new AuthenticationException();
-        }
-
-        await _repository.DeleteFile(uniqueName);
-
-        File.Delete(filePath);
+        //File.Delete(filePath);
     }
 
-    public async Task AutoDeleteFile()
-    {
-        var directoryPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot");
+    //public async Task AutoDeleteFile()
+    //{
+    //    var directoryPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot");
 
-        foreach (var filePath in Directory.EnumerateFiles(directoryPath))
-        {
-            var fileInfo = new FileInfo(filePath);
+    //    foreach (var filePath in Directory.EnumerateFiles(directoryPath))
+    //    {
+    //        var fileInfo = new FileInfo(filePath);
 
-            if (fileInfo.CreationTime < DateTime.UtcNow.AddDays(-1))
-            {
-                File.Delete(filePath);
-            }
-        }
+    //        if (fileInfo.CreationTime < DateTime.UtcNow.AddDays(-1))
+    //        {
+    //            File.Delete(filePath);
+    //        }
+//    //    }
 
-        await _repository.DeletionByDate();
-    }
-}
+//    //    await _repository.DeletionByDate();
+//    }
+//}
