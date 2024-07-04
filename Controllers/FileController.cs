@@ -1,11 +1,13 @@
-﻿using FileService.Service;
+﻿using FileService.Models.Request;
+using FileService.Models.Response;
+using FileService.Service;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Authentication;
 
 namespace FileService.Controllers;
 
 [ApiController]
-[Route("File")]
+[Route("files")]
 public class FileController : ControllerBase
 {
     private readonly IFileService _fileService;

@@ -1,37 +1,32 @@
 ﻿using FileService.Service;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace FileService;
 
-public class AutoDeleteFile : IHostedService
+public class AutoDeleteFile : BackgroundService
 {
     private readonly IServiceScopeFactory _serviceScopeFactory;
+    private readonly int _timeInterval;
 
-    public AutoDeleteFile(IServiceScopeFactory serviceScopeFactory)
+
+    public AutoDeleteFile(IConfiguration configuration, IServiceScopeFactory serviceScopeFactory)
     {
+        _timeInterval = configuration.GetValue<int>("Time:Hour");
         _serviceScopeFactory = serviceScopeFactory;
     }
 
-    private Timer? _timer;
-
-    public Task StartAsync(CancellationToken cancellationToken)
+    protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        _timer = new Timer(async state =>
+        while (!stoppingToken.IsCancellationRequested)
         {
             using var scope = _serviceScopeFactory.CreateScope();
-            var fileService = scope.ServiceProvider.GetRequiredService<IFileService>();
-            await fileService.AutoDeleteFile();
-        }, null, TimeSpan.Zero, TimeSpan.FromSeconds(5));
+            var serviceFile = scope.ServiceProvider.GetRequiredService<IFileService>();
+            await serviceFile.AutoDeleteFile();
 
-        return Task.CompletedTask;
-    }
-
-    public Task StopAsync(CancellationToken cancellationToken)
-    {
-        if (_timer != null)
-        {
-            _timer.Change(Timeout.Infinite, 0);
-            _timer = null;
+            await Task.Delay(TimeSpan.FromHours(_timeInterval), stoppingToken);
         }
-        return Task.CompletedTask;
     }
+
+
 }

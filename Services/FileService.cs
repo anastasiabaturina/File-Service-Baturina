@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using FileService.Models;
 using Scrypt;
 using System.Security.Authentication;
 using Visus.Cuid;
+using FileService.Models.Request;
 
 namespace FileService.Service;
 
@@ -23,16 +25,15 @@ public class FileService : IFileService
         var uniqueName = $"{Cuid.NewCuid()}_{uploadFile.File.FileName}";
         var path = Path.Combine(_webHostEnvironment.WebRootPath, uniqueName);
 
-        var fileEntity = new File
+        var file = new Document
         {
-            Id = new Guid(),
             UniqueName = uniqueName,
             Path = path,
             UploadDateTime = DateTime.UtcNow,
             Password = _scryptEncoder.Encode(uploadFile.Password)
         };
 
-        await _repository.SaveFile(fileEntity);
+        await _repository.SaveFile(file);
 
         await using (var stream = new FileStream(path, FileMode.Create, FileAccess.Write, FileShare.Read, 4096, useAsync: true))
         {
@@ -93,7 +94,7 @@ public class FileService : IFileService
 
         await _repository.DeleteFile(uniqueName);
 
-        System.IO.File.Delete(filePath);
+        File.Delete(filePath);
     }
 
     public async Task AutoDeleteFile()
@@ -106,7 +107,7 @@ public class FileService : IFileService
 
             if (fileInfo.CreationTime < DateTime.UtcNow.AddDays(-1))
             {
-                System.IO.File.Delete(filePath);
+                File.Delete(filePath);
             }
         }
 

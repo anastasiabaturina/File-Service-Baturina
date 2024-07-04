@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using FileService.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace FileService;
 
@@ -6,5 +7,5 @@ public class Context : DbContext
 {
     public Context(DbContextOptions<Context> options) : base(options)
     {}
-    public DbSet<File> File { get; set; }
+    public DbSet<Document> Files { get; set; }
 }

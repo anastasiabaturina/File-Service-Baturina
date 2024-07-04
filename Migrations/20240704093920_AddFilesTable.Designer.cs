@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace FileService.Migrations
 {
     [DbContext(typeof(Context))]
-    [Migration("20240701122230_AddFilesTable")]
+    [Migration("20240704093920_AddFilesTable")]
     partial class AddFilesTable
     {
         /// <inheritdoc />
@@ -25,7 +25,7 @@ namespace FileService.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("FileService.FileEntity", b =>
+            modelBuilder.Entity("FileService.Models.Document", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -46,7 +46,7 @@ namespace FileService.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("File");
+                    b.ToTable("Files");
                 });
 #pragma warning restore 612, 618
         }

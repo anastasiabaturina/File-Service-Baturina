@@ -1,9 +1,8 @@
 ﻿namespace FileService.Models;
 
-public class File
+public class Document
 {
     public Guid Id { get; set; }
-
     public string UniqueName { get; set; }
 
     public string? Path { get; set; }

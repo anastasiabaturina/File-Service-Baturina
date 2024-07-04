@@ -22,7 +22,7 @@ namespace FileService.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("FileService.FileEntity", b =>
+            modelBuilder.Entity("FileService.Models.Document", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -43,7 +43,7 @@ namespace FileService.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("File");
+                    b.ToTable("Files");
                 });
 #pragma warning restore 612, 618
         }
