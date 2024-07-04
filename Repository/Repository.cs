@@ -15,7 +15,7 @@ public class Repository : IRepository
         _timeInterval = configuration.GetValue<int>("Time:Hour");
     }
 
-    public async Task SaveFile(Document file)
+    public async Task Save(Document file)
     {
         await _context.Files.AddAsync(file);
         await _context.SaveChangesAsync(); 
@@ -33,7 +33,7 @@ public class Repository : IRepository
         return file.Password;
     }
 
-    public async Task DeleteFile(string uniqueName)
+    public async Task Delete(string uniqueName)
     {
         var file = await _context.Files.FirstOrDefaultAsync(x => x.UniqueName == uniqueName);
 
