@@ -6,7 +6,7 @@ public interface IRepository
 {
     Task Save(Document file);
 
-    Task<string> GetHashPassword(string uniqueName);
+    Task<Document> Get(string uniqueName);
 
     Task Delete(string uniqueName);
 

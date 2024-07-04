@@ -21,7 +21,7 @@ public class Repository : IRepository
         await _context.SaveChangesAsync(); 
     }
 
-    public async Task<string> GetHashPassword(string uniqueName)
+    public async Task<Document> Get(string uniqueName)
     {
         var file = await _context.Files.FirstOrDefaultAsync(x => x.UniqueName == uniqueName);
 
@@ -30,7 +30,7 @@ public class Repository : IRepository
             throw new FileNotFoundException();
         }
 
-        return file.Password;
+        return file;
     }
 
     public async Task Delete(string uniqueName)
