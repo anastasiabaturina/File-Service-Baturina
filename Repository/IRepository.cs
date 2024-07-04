@@ -10,5 +10,7 @@ public interface IRepository
 
     Task Delete(string uniqueName);
 
-    Task DeletionByDate();
+    Task<List<Document>> GetFilesByDateTimeAsync(DateTime timeInterval);
+
+    Task RemoveListAsync(List<Document> files);
 }

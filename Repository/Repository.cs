@@ -7,21 +7,19 @@ namespace FileService;
 public class Repository : IRepository
 {
     private readonly DocumentContext _context;
-    private readonly int _timeInterval;
 
     public Repository(DocumentContext context, IConfiguration configuration)
     {
         _context = context;
-        _timeInterval = configuration.GetValue<int>("Time:Hour");
     }
 
-    public async Task Save(Document file)
+    public async Task SaveAsync(Document file)
     {
         await _context.Files.AddAsync(file);
         await _context.SaveChangesAsync(); 
     }
 
-    public async Task<Document> Get(string uniqueName)
+    public async Task<Document> GetAsync(string uniqueName)
     {
         var file = await _context.Files.FirstOrDefaultAsync(x => x.UniqueName == uniqueName);
 
@@ -33,7 +31,7 @@ public class Repository : IRepository
         return file;
     }
 
-    public async Task Delete(string uniqueName)
+    public async Task DeleteAsync(string uniqueName)
     {
         var file = await _context.Files.FirstOrDefaultAsync(x => x.UniqueName == uniqueName);
 
@@ -46,9 +44,14 @@ public class Repository : IRepository
         await _context.SaveChangesAsync();
     }
 
-    public async Task DeletionByDate()
+    public async Task<List<Document>> GetFilesByDateTimeAsync(DateTime timeInterval)
     {
-        _context.Files.RemoveRange(_context.Files.Where(f => f.UploadDateTime < DateTime.UtcNow.AddHours(-_timeInterval)));
+        return await _context.Files.Where(f => f.UploadDateTime < timeInterval).ToListAsync();
+    }
+
+    public async Task RemoveListAsync(List<Document> files)
+    {
+        _context.Files.RemoveRange(files);
         await _context.SaveChangesAsync();
     }
 }
