@@ -7,7 +7,7 @@ using System.Security.Authentication;
 namespace FileService.Controllers;
 
 [ApiController]
-[Route("files")]
+[Route("api/files")]
 public class FileController : ControllerBase
 {
     private readonly IFileService _fileService;
@@ -23,11 +23,9 @@ public class FileController : ControllerBase
         var response = new Response<string>
         {              
             Data = await _fileService.SaveFile(uploadFileRequest),
-            StatusCode = StatusCodes.Status201Created,
-            Success = true,
         };
 
-        return Ok(response);
+        return CreatedAtAction(nameof(UploadFile), response);
     }
 
     [HttpGet("{fileName}")]
@@ -43,8 +41,6 @@ public class FileController : ControllerBase
             var response = new Response<string>
             {
                 Data = ex.Message,
-                StatusCode = StatusCodes.Status400BadRequest,
-                Success = false
             };
 
             return BadRequest();
@@ -55,8 +51,6 @@ public class FileController : ControllerBase
             var response = new Response<string>
             {
                 Data = "Файл не найден",
-                StatusCode = StatusCodes.Status404NotFound,
-                Success = false
             };
 
             return NotFound(response);
@@ -73,8 +67,6 @@ public class FileController : ControllerBase
             var response = new Response<string>
             {
                 Data = "Файл успешно удален",
-                StatusCode = StatusCodes.Status200OK,
-                Success = true
             };
 
             return Ok(response);
@@ -85,8 +77,6 @@ public class FileController : ControllerBase
             var response = new Response<string>
             {
                 Data = ex.Message,
-                StatusCode = StatusCodes.Status400BadRequest,
-                Success = false
             };
 
             return BadRequest();
@@ -97,8 +87,6 @@ public class FileController : ControllerBase
             var response = new Response<string>
             {
                 Data = "Файл не найден",
-                StatusCode = StatusCodes.Status404NotFound,
-                Success = false
             };
 
             return NotFound(response);
@@ -109,8 +97,6 @@ public class FileController : ControllerBase
             var response = new Response<string>
             {
                 Data = "Неверный пароль",
-                StatusCode = StatusCodes.Status401Unauthorized,
-                Success = false
             };
 
             return Unauthorized(response);
