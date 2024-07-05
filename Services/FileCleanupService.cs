@@ -1,6 +1,4 @@
-﻿using FileService.Service;
-
-namespace FileService;
+﻿namespace FileService.Service;
 
 public class FileCleanupService : BackgroundService
 {

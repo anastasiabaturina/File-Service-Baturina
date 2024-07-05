@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using FileService.Models;
+﻿using FileService.Models;
 using Scrypt;  
 using Visus.Cuid;
 using FileService.Models.UploadFileDto;
@@ -45,9 +44,22 @@ public class FileService : IFileService
         return uniqueName;
     }
 
-    public async Task<FileDto> GetAsync(string fileName)
+    public async Task<FileDto> GetAsync(string fileName, CancellationToken cancellationToken)
     {
+        if (string.IsNullOrEmpty(fileName))
+        {
+            throw new ArgumentException("The file name cannot be empty");
+        }
+
+        var document = await _repository.GetAsync(fileName, cancellationToken);
+
+        if (document == null)
+        {
+            throw new FileNotFoundException();
+        }
+
         var filePath = Path.Combine(_webHostEnvironment.WebRootPath, fileName);
+
         byte[] fileBytes;
         await using (var stream = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read, 4096, useAsync: true))
         {
@@ -65,16 +77,26 @@ public class FileService : IFileService
 
     public async Task DeleteAsync(DeleteFileDto deleteFileDto, CancellationToken cancellationToken)
     {
-        var filePath = Path.Combine(_webHostEnvironment.WebRootPath, deleteFileDto.UniqueName);
+        if (string.IsNullOrEmpty(deleteFileDto.UniqueName))
+        {
+            throw new ArgumentException("The file name cannot be empty");
+        }
+
+        if (string.IsNullOrEmpty(deleteFileDto.Password))
+        {
+            throw new ArgumentException("The password cannot be empty");
+        }
 
         var document = await _repository.GetAsync(deleteFileDto.UniqueName, cancellationToken);
 
         if (!_scryptEncoder.Compare(deleteFileDto.Password, document.Password))
         {
-            throw new ArgumentOutOfRangeException("invalid password");
+            throw new ArgumentException("Invalid password");
         }
 
         await _repository.DeleteAsync(deleteFileDto.UniqueName, cancellationToken);
+
+        var filePath = Path.Combine(_webHostEnvironment.WebRootPath, deleteFileDto.UniqueName);
 
         File.Delete(filePath);
     }

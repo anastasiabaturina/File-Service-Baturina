@@ -4,9 +4,8 @@ using FileService.Models.Request;
 using FileService.Models.Response;
 using FileService.Models.UploadFileDto;
 using FileService.Service;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Authentication;
+
 
 namespace FileService.Controllers;
 
@@ -38,9 +37,9 @@ public class FileController : ControllerBase
     }
 
     [HttpGet("{fileName}")]
-    public async Task<IActionResult> DownloadFile([FromRoute] string fileName)
+    public async Task<IActionResult> DownloadFile([FromRoute] string fileName, CancellationToken cancellationToken)
     {
-        var fileDto = await _fileService.GetAsync(fileName);
+        var fileDto = await _fileService.GetAsync(fileName, cancellationToken);
 
         return File(fileDto.Content, fileDto.ContentType, fileDto.FileName);
     }

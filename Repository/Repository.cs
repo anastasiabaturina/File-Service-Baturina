@@ -1,7 +1,5 @@
 ﻿using FileService.Models;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using System.Threading;
 
 namespace FileService;
 
@@ -49,6 +47,6 @@ public class Repository : IRepository
     {
         await _context.Files.Where(f => f.UploadDateTime < timeInterval)
             .ExecuteDeleteAsync(cancellationToken);
-        await _context.SaveChangesAsync(cancellationToken);
+        await _context.SaveChangesAsync();
     }
 }
