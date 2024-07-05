@@ -39,31 +39,10 @@ public class FileController : ControllerBase
 
     [HttpGet("{fileName}")]
     public async Task<IActionResult> DownloadFile([FromRoute] string fileName)
-    { 
-        try
-        {
-            return await _fileService.GetAsync(fileName);
-        }
+    {
+        var fileDto = await _fileService.GetAsync(fileName);
 
-        catch (ArgumentException ex)
-        {
-            var response = new Response<string>
-            {
-                Data = ex.Message,
-            };
-
-            return BadRequest();
-        }
-
-        catch (FileNotFoundException)
-        {
-            var response = new Response<string>
-            {
-                Data = "Файл не найден",
-            };
-
-            return NotFound(response);
-        }
+        return File(fileDto.Content, fileDto.ContentType, fileDto.FileName);
     }
 
     [HttpDelete]
@@ -79,34 +58,4 @@ public class FileController : ControllerBase
 
         return Ok(response);
     }
-
-    //catch (ArgumentException ex)
-    //{
-    //    var response = new Response<string>
-    //    {
-    //        Data = ex.Message,
-    //    };
-
-    //    return BadRequest();
-    //}
-
-    //catch (FileNotFoundException)
-    //{
-    //    var response = new Response<string>
-    //    {
-    //        Data = "Файл не найден",
-    //    };
-
-    //    return NotFound(response);
-    //}
-
-    //catch (AuthenticationException)
-    //{
-    //    var response = new Response<string>
-    //    {
-    //        Data = "Неверный пароль",
-    //    };
-
-    //    return Unauthorized(response);
-    //}
 }

@@ -9,7 +9,7 @@ public interface IFileService
 {
     Task<string> SaveAsync(UploadFileDto uploadFile, CancellationToken cancellationToken);
 
-    Task<FileStreamResult> GetAsync(string fileName);
+    Task<FileDto> GetAsync(string fileName);
 
     Task DeleteAsync(DeleteFileDto deleteFileDto, CancellationToken cancellationToken);
 

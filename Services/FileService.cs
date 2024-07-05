@@ -24,7 +24,7 @@ public class FileService : IFileService
 
     public async Task<string> SaveAsync(UploadFileDto uploadFile, CancellationToken cancellationToken)
     {
-        var uniqueName = $"{Cuid.NewCuid()}_{uploadFile.File.FileName}";
+        var uniqueName = $"{Cuid.NewCuid()}_{uploadFile.File.FileName.Replace(" ", "_")}";
         var path = Path.Combine(_webHostEnvironment.WebRootPath, uniqueName);
 
         var file = new Document
@@ -33,49 +33,39 @@ public class FileService : IFileService
             Path = path,
             UploadDateTime = DateTime.UtcNow,
             Password = _scryptEncoder.Encode(uploadFile.Password)
-        };
-
-        await _repository.SaveAsync(file, cancellationToken);
+        };      
 
         await using (var stream = new FileStream(path, FileMode.Create, FileAccess.Write, FileShare.Read, 4096, useAsync: true))
         {
             await uploadFile.File.CopyToAsync(stream);
         }
 
+        await _repository.SaveAsync(file, cancellationToken);
+
         return uniqueName;
     }
 
-    public async Task<FileStreamResult> GetAsync(string fileName)
+    public async Task<FileDto> GetAsync(string fileName)
     {
-        if (string.IsNullOrEmpty(fileName))
-        {
-            throw new ArgumentException("Имя файла не может быть пустым", nameof(fileName));
-        }
-
         var filePath = Path.Combine(_webHostEnvironment.WebRootPath, fileName);
-
-        if (File.Exists(filePath))
-        {
-            throw new FileNotFoundException();
-        }
-
+        byte[] fileBytes;
         await using (var stream = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read, 4096, useAsync: true))
         {
-            return new FileStreamResult(stream, System.Net.Mime.MediaTypeNames.Application.Octet)
-            {
-                FileDownloadName = fileName
-            };
+            fileBytes = new byte[stream.Length];
+            await stream.ReadAsync(fileBytes, 0, (int)stream.Length);
         }
+
+        return new FileDto
+        {
+            FileName = fileName,
+            Content = fileBytes,
+            ContentType = System.Net.Mime.MediaTypeNames.Application.Octet
+        };
     }
 
     public async Task DeleteAsync(DeleteFileDto deleteFileDto, CancellationToken cancellationToken)
     {
         var filePath = Path.Combine(_webHostEnvironment.WebRootPath, deleteFileDto.UniqueName);
-
-        if (!File.Exists(filePath))
-        {
-            throw new FileNotFoundException("the file was not found");
-        }
 
         var document = await _repository.GetAsync(deleteFileDto.UniqueName, cancellationToken);
 
