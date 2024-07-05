@@ -10,7 +10,7 @@ public class FileCleanupService : BackgroundService
 
     public FileCleanupService(IConfiguration configuration, IServiceScopeFactory serviceScopeFactory)
     {
-        _timeInterval = configuration.GetValue<int>("Time:Hour");
+        _timeInterval = configuration.GetValue<int>("Time:Day");
         _serviceScopeFactory = serviceScopeFactory;
     }
 
@@ -20,9 +20,9 @@ public class FileCleanupService : BackgroundService
         {
             using var scope = _serviceScopeFactory.CreateScope();
             var serviceFile = scope.ServiceProvider.GetRequiredService<IFileService>();
-            await serviceFile.AutoDeleteFilesAsync();
+            await serviceFile.AutoDeleteFilesAsync(cancellationToken);
 
-            await Task.Delay(TimeSpan.FromHours(_timeInterval), cancellationToken);
+            await Task.Delay(TimeSpan.FromDays(_timeInterval), cancellationToken);
         }
     }
 }

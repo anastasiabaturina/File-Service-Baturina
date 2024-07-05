@@ -4,10 +4,6 @@ using Scrypt;
 using Visus.Cuid;
 using FileService.Models.UploadFileDto;
 using FileService.Models.Dto_s;
-using System.Security.Authentication;
-using Microsoft.Extensions.Configuration;
-using System.IO;
-
 
 namespace FileService.Service;
 
@@ -23,10 +19,10 @@ public class FileService : IFileService
         _repository = repository;
         _webHostEnvironment = webHostEnvironment;
         _scryptEncoder = scryptEncoder;
-        _timeInterval = configuration.GetValue<int>("Time:Hour");
+        _timeInterval = configuration.GetValue<int>("Time:Day");
     }
 
-    public async Task<string> SaveAsync(UploadFileDto uploadFile)
+    public async Task<string> SaveAsync(UploadFileDto uploadFile, CancellationToken cancellationToken)
     {
         var uniqueName = $"{Cuid.NewCuid()}_{uploadFile.File.FileName}";
         var path = Path.Combine(_webHostEnvironment.WebRootPath, uniqueName);
@@ -39,7 +35,7 @@ public class FileService : IFileService
             Password = _scryptEncoder.Encode(uploadFile.Password)
         };
 
-        await _repository.SaveAsync(file);
+        await _repository.SaveAsync(file, cancellationToken);
 
         await using (var stream = new FileStream(path, FileMode.Create, FileAccess.Write, FileShare.Read, 4096, useAsync: true))
         {
@@ -72,7 +68,7 @@ public class FileService : IFileService
         }
     }
 
-    public async Task DeleteAsync(DeleteFileDto deleteFileDto)
+    public async Task DeleteAsync(DeleteFileDto deleteFileDto, CancellationToken cancellationToken)
     {
         var filePath = Path.Combine(_webHostEnvironment.WebRootPath, deleteFileDto.UniqueName);
 
@@ -81,26 +77,26 @@ public class FileService : IFileService
             throw new FileNotFoundException("the file was not found");
         }
 
-        var document = await _repository.GetAsync(deleteFileDto.UniqueName);
+        var document = await _repository.GetAsync(deleteFileDto.UniqueName, cancellationToken);
 
         if (!_scryptEncoder.Compare(deleteFileDto.Password, document.Password))
         {
             throw new ArgumentOutOfRangeException("invalid password");
         }
 
-        await _repository.DeleteAsync(deleteFileDto.UniqueName);
+        await _repository.DeleteAsync(deleteFileDto.UniqueName, cancellationToken);
 
         File.Delete(filePath);
     }
 
 
-    public async Task AutoDeleteFilesAsync()
+    public async Task AutoDeleteFilesAsync(CancellationToken cancellationToken)
     {
         var directoryPath = Path.Combine(_webHostEnvironment.WebRootPath);
         var directory = new DirectoryInfo(directoryPath);
-        var dateTimeInterval = DateTime.UtcNow.AddHours(-_timeInterval);
+        var dateTimeInterval = DateTime.UtcNow.AddDays(-_timeInterval);
 
-        await _repository.DeleteFilesByDateTimeAsync(dateTimeInterval);
+        await _repository.DeleteFilesByDateTimeAsync(dateTimeInterval, cancellationToken);
 
         foreach (var file in directory.GetFiles())
         {

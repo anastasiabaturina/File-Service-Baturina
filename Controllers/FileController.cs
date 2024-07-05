@@ -4,6 +4,7 @@ using FileService.Models.Request;
 using FileService.Models.Response;
 using FileService.Models.UploadFileDto;
 using FileService.Service;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Authentication;
 
@@ -23,10 +24,10 @@ public class FileController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> UploadFile([FromForm] UploadFileRequest uploadFileRequest)
+    public async Task<IActionResult> UploadFile([FromForm] UploadFileRequest uploadFileRequest, CancellationToken cancellationToken)
     {
         var uploadFileDto = _mapper.Map<UploadFileDto>(uploadFileRequest);
-        var uniqueFileName = await _fileService.SaveAsync(uploadFileDto);
+        var uniqueFileName = await _fileService.SaveAsync(uploadFileDto, cancellationToken);
 
         var response = new Response<string>
         {              
@@ -66,10 +67,10 @@ public class FileController : ControllerBase
     }
 
     [HttpDelete]
-    public async Task<IActionResult> DeleteFile(DeleteFileRequest deleteFileRequest)
+    public async Task<IActionResult> DeleteFile(DeleteFileRequest deleteFileRequest, CancellationToken cancellationToken)
     {
         var deleteFileDto = _mapper.Map<DeleteFileDto>(deleteFileRequest);
-        await _fileService.DeleteAsync(deleteFileDto);
+        await _fileService.DeleteAsync(deleteFileDto, cancellationToken);
 
         var response = new Response<string>
         {
