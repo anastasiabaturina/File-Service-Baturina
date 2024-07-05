@@ -44,14 +44,10 @@ public class Repository : IRepository
         await _context.SaveChangesAsync();
     }
 
-    public async Task<List<Document>> GetFilesByDateTimeAsync(DateTime timeInterval)
+    public async Task DeleteFilesByDateTimeAsync(DateTime timeInterval)
     {
-        return await _context.Files.Where(f => f.UploadDateTime < timeInterval).ToListAsync();
-    }
-
-    public async Task RemoveListAsync(List<Document> files)
-    {
-        _context.Files.RemoveRange(files);
+        await _context.Files.Where(f => f.UploadDateTime < timeInterval)
+            .ExecuteDeleteAsync();
         await _context.SaveChangesAsync();
     }
 }

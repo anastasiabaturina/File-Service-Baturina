@@ -11,7 +11,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace FileService.Migrations
 {
-    [DbContext(typeof(Context))]
+    [DbContext(typeof(DocumentContext))]
     [Migration("20240704093920_AddFilesTable")]
     partial class AddFilesTable
     {

@@ -4,13 +4,11 @@ namespace FileService;
 
 public interface IRepository
 {
-    Task Save(Document file);
+    Task SaveAsync(Document file);
 
-    Task<Document> Get(string uniqueName);
+    Task<Document> GetAsync(string uniqueName);
 
-    Task Delete(string uniqueName);
+    Task DeleteAsync(string uniqueName);
 
-    Task<List<Document>> GetFilesByDateTimeAsync(DateTime timeInterval);
-
-    Task RemoveListAsync(List<Document> files);
+    Task DeleteFilesByDateTimeAsync(DateTime timeInterval);
 }

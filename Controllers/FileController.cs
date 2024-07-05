@@ -26,7 +26,7 @@ public class FileController : ControllerBase
     public async Task<IActionResult> UploadFile([FromForm] UploadFileRequest uploadFileRequest)
     {
         var uploadFileDto = _mapper.Map<UploadFileDto>(uploadFileRequest);
-        var uniqueFileName = await _fileService.SaveFile(uploadFileDto);
+        var uniqueFileName = await _fileService.SaveAsync(uploadFileDto);
 
         var response = new Response<string>
         {              
@@ -41,7 +41,7 @@ public class FileController : ControllerBase
     { 
         try
         {
-            return await _fileService.GetFileAsync(fileName);
+            return await _fileService.GetAsync(fileName);
         }
 
         catch (ArgumentException ex)
@@ -69,7 +69,7 @@ public class FileController : ControllerBase
     public async Task<IActionResult> DeleteFile(DeleteFileRequest deleteFileRequest)
     {
         var deleteFileDto = _mapper.Map<DeleteFileDto>(deleteFileRequest);
-        await _fileService.DeleteFile(deleteFileDto);
+        await _fileService.DeleteAsync(deleteFileDto);
 
         var response = new Response<string>
         {
@@ -108,5 +108,4 @@ public class FileController : ControllerBase
 
     //    return Unauthorized(response);
     //}
-}
 }

@@ -7,11 +7,11 @@ namespace FileService.Service;
 
 public interface IFileService
 {
-    Task<string> SaveFile(UploadFileDto uploadFile);
+    Task<string> SaveAsync(UploadFileDto uploadFile);
 
-    Task<FileStreamResult> GetFileAsync(string fileName);
+    Task<FileStreamResult> GetAsync(string fileName);
 
-    Task<bool> DeleteFile(DeleteFileDto deleteFileDto);
+    Task DeleteAsync(DeleteFileDto deleteFileDto);
 
-    Task AutoDeleteFile();
+    Task AutoDeleteFilesAsync();
 }

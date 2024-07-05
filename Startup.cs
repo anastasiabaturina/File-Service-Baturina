@@ -19,14 +19,16 @@ public class Startup
     {
         Env.Load(".env");
         var connection = Environment.GetEnvironmentVariable("DATABASE");
+
         services.AddControllers();
         services.AddEndpointsApiExplorer();
         services.AddSwaggerGen();
+
         services.AddDbContext<DocumentContext>(options => options.UseNpgsql(connection));
         services.AddScoped<IFileService, Service.FileService>();
         services.AddScoped<IRepository, Repository>();
         services.AddSingleton<ScryptEncoder>();
-        services.AddHostedService<AutoDeleteFile>();
+        services.AddHostedService<FileCleanupService>();
         services.AddAutoMapper(typeof(MapFile));
     }
 

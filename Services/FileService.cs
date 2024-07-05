@@ -1,11 +1,13 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using FileService.Models;
-using Scrypt;
-using System.Security.Authentication;
+using Scrypt;  
 using Visus.Cuid;
-using FileService.Models.Request;
 using FileService.Models.UploadFileDto;
 using FileService.Models.Dto_s;
+using System.Security.Authentication;
+using Microsoft.Extensions.Configuration;
+using System.IO;
+
 
 namespace FileService.Service;
 
@@ -14,15 +16,17 @@ public class FileService : IFileService
     private readonly IRepository _repository;
     private readonly IWebHostEnvironment _webHostEnvironment;
     private readonly ScryptEncoder _scryptEncoder;
+    private readonly int _timeInterval;
 
-    public FileService(IRepository repository, IWebHostEnvironment webHostEnvironment, ScryptEncoder scryptEncoder)
+    public FileService(IRepository repository, IWebHostEnvironment webHostEnvironment, ScryptEncoder scryptEncoder, IConfiguration configuration)
     {
         _repository = repository;
         _webHostEnvironment = webHostEnvironment;
         _scryptEncoder = scryptEncoder;
+        _timeInterval = configuration.GetValue<int>("Time:Hour");
     }
 
-    public async Task<string> SaveFile(UploadFileDto uploadFile)
+    public async Task<string> SaveAsync(UploadFileDto uploadFile)
     {
         var uniqueName = $"{Cuid.NewCuid()}_{uploadFile.File.FileName}";
         var path = Path.Combine(_webHostEnvironment.WebRootPath, uniqueName);
@@ -35,17 +39,17 @@ public class FileService : IFileService
             Password = _scryptEncoder.Encode(uploadFile.Password)
         };
 
-        await _repository.Save(file);
+        await _repository.SaveAsync(file);
 
         await using (var stream = new FileStream(path, FileMode.Create, FileAccess.Write, FileShare.Read, 4096, useAsync: true))
         {
-            await uploadFile.File.CopyToAsync(stream); 
+            await uploadFile.File.CopyToAsync(stream);
         }
 
         return uniqueName;
     }
 
-    public async Task<FileStreamResult> GetFileAsync(string fileName)
+    public async Task<FileStreamResult> GetAsync(string fileName)
     {
         if (string.IsNullOrEmpty(fileName))
         {
@@ -54,7 +58,7 @@ public class FileService : IFileService
 
         var filePath = Path.Combine(_webHostEnvironment.WebRootPath, fileName);
 
-        if (!System.IO.File.Exists(filePath))
+        if (File.Exists(filePath))
         {
             throw new FileNotFoundException();
         }
@@ -68,41 +72,42 @@ public class FileService : IFileService
         }
     }
 
-    //public async Task<bool> DeleteFile(DeleteFileDto deleteFileDto)
-    //{
-        //var filePath = Path.Combine(_webHostEnvironment.WebRootPath, uniqueName);
+    public async Task DeleteAsync(DeleteFileDto deleteFileDto)
+    {
+        var filePath = Path.Combine(_webHostEnvironment.WebRootPath, deleteFileDto.UniqueName);
 
-        //if (!System.IO.File.Exists(filePath))
-        //{
-        //    throw new FileNotFoundException();
-        //}
+        if (!File.Exists(filePath))
+        {
+            throw new FileNotFoundException("the file was not found");
+        }
 
-        //var passwordHash = await _repository.GetHashPassword(uniqueName);
+        var document = await _repository.GetAsync(deleteFileDto.UniqueName);
 
-        //if (!_scryptEncoder.Compare(password, passwordHash))
-        //{
-        //    throw new AuthenticationException();
-        //}
+        if (!_scryptEncoder.Compare(deleteFileDto.Password, document.Password))
+        {
+            throw new ArgumentOutOfRangeException("invalid password");
+        }
 
-        //await _repository.DeleteFile(uniqueName);
+        await _repository.DeleteAsync(deleteFileDto.UniqueName);
 
-        //File.Delete(filePath);
+        File.Delete(filePath);
     }
 
-    //public async Task AutoDeleteFile()
-    //{
-    //    var directoryPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot");
 
-    //    foreach (var filePath in Directory.EnumerateFiles(directoryPath))
-    //    {
-    //        var fileInfo = new FileInfo(filePath);
+    public async Task AutoDeleteFilesAsync()
+    {
+        var directoryPath = Path.Combine(_webHostEnvironment.WebRootPath);
+        var directory = new DirectoryInfo(directoryPath);
+        var dateTimeInterval = DateTime.UtcNow.AddHours(-_timeInterval);
 
-    //        if (fileInfo.CreationTime < DateTime.UtcNow.AddDays(-1))
-    //        {
-    //            File.Delete(filePath);
-    //        }
-//    //    }
+        await _repository.DeleteFilesByDateTimeAsync(dateTimeInterval);
 
-//    //    await _repository.DeletionByDate();
-//    }
-//}
+        foreach (var file in directory.GetFiles())
+        {
+            if (file.CreationTime < dateTimeInterval)
+            {
+                file.Delete();
+            }
+        }        
+    }
+}
