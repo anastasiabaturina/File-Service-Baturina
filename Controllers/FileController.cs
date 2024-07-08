@@ -50,11 +50,6 @@ public class FileController : ControllerBase
         var deleteFileDto = _mapper.Map<DeleteFileDto>(deleteFileRequest);
         await _fileService.DeleteAsync(deleteFileDto, cancellationToken);
 
-        var response = new Response<string>
-        {
-            Data = $"{deleteFileRequest.UniqueName} was deleted"
-        };
-
-        return Ok(response);
+        return Ok();
     }
 }
