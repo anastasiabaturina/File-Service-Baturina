@@ -3,11 +3,11 @@ using System.Net;
 
 namespace FileService;
 
-public class ExceptionHandlerMiddleware
+public class ExceptionHandingMiddleware
 {
     private readonly RequestDelegate _next;
 
-    public ExceptionHandlerMiddleware(RequestDelegate next)
+    public ExceptionHandingMiddleware(RequestDelegate next)
     {
         _next = next;
     }
