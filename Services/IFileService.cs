@@ -1,5 +1,5 @@
 ﻿using FileService.Models.Dtos;
-using FileService.Models.Response;
+using FileService.Models.Responses;
 
 namespace FileService.Services;
 

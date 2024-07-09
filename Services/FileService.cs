@@ -2,7 +2,7 @@
 using Scrypt;  
 using Visus.Cuid;
 using FileService.Models.Dtos;
-using FileService.Models.Response;
+using FileService.Models.Responses;
 using AutoMapper;
 
 namespace FileService.Services;

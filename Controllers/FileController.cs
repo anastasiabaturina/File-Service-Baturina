@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using FileService.Models.Dtos;
-using FileService.Models.Request;
-using FileService.Models.Response;
+using FileService.Models.Requests;
+using FileService.Models.Responses;
 using FileService.Models.UploadFileDto;
 using FileService.Services;
 using Microsoft.AspNetCore.Mvc;

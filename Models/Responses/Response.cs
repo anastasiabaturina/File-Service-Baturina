@@ -1,4 +1,4 @@
-﻿namespace FileService.Models.Response;
+﻿namespace FileService.Models.Responses;
 
 public class Response<T>
 {

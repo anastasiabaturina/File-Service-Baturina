@@ -1,4 +1,4 @@
-﻿namespace FileService.Models.Request;
+﻿namespace FileService.Models.Requests;
 
 public class DeleteFileRequest
 {

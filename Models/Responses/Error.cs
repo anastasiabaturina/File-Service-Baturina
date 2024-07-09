@@ -1,6 +1,6 @@
 ﻿using System.Net;
 
-namespace FileService.Models.Response;
+namespace FileService.Models.Responses;
 
 public class Error
 {
