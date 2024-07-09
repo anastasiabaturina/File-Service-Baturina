@@ -4,10 +4,9 @@ using Visus.Cuid;
 using FileService.Models.UploadFileDto;
 using FileService.Models.Dto_s;
 using FileService.Models.Response;
-using FileService.Models.Request;
 using AutoMapper;
 
-namespace FileService.Service;
+namespace FileService.Services;
 
 public class FileService : IFileService
 {

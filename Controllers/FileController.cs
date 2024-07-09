@@ -3,7 +3,7 @@ using FileService.Models.Dto_s;
 using FileService.Models.Request;
 using FileService.Models.Response;
 using FileService.Models.UploadFileDto;
-using FileService.Service;
+using FileService.Services;
 using Microsoft.AspNetCore.Mvc;
 
 

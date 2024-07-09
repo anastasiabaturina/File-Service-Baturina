@@ -1,4 +1,4 @@
-﻿namespace FileService.Service;
+﻿namespace FileService.Services;
 
 public class FileCleanupService : BackgroundService
 {

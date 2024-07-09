@@ -3,7 +3,7 @@ using FileService.Models.Dto_s;
 using FileService.Models.Response;
 using FileService.Models.UploadFileDto;
 
-namespace FileService.Service;
+namespace FileService.Services;
 
 public interface IFileService
 {

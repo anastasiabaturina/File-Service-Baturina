@@ -1,6 +1,6 @@
 ﻿using DotNetEnv;
 using FileService.Automapper;
-using FileService.Service;
+using FileService.Services;
 using Microsoft.EntityFrameworkCore;
 using Scrypt;
 
@@ -25,7 +25,7 @@ public class Startup
         services.AddSwaggerGen();
 
         services.AddDbContext<DocumentContext>(options => options.UseNpgsql(connection));
-        services.AddScoped<IFileService, Service.FileService>();
+        services.AddScoped<IFileService, Services.FileService>();
         services.AddScoped<IRepository, Repository>();
         services.AddSingleton<ScryptEncoder>();
         services.AddHostedService<FileCleanupService>();
