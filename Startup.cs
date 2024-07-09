@@ -46,7 +46,7 @@ public class Startup
             app.UseHsts();
         }
 
-        app.UseMiddleware<ExceptionHandlerMiddleware>();
+        app.UseMiddleware<ExceptionHandingMiddleware>();
         app.UseHttpsRedirection();
         app.UseStaticFiles();
 

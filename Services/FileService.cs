@@ -3,6 +3,9 @@ using Scrypt;
 using Visus.Cuid;
 using FileService.Models.UploadFileDto;
 using FileService.Models.Dto_s;
+using FileService.Models.Response;
+using FileService.Models.Request;
+using AutoMapper;
 
 namespace FileService.Service;
 
@@ -12,16 +15,18 @@ public class FileService : IFileService
     private readonly IWebHostEnvironment _webHostEnvironment;
     private readonly ScryptEncoder _scryptEncoder;
     private readonly int _timeInterval;
+    private readonly IMapper _mapper;
 
-    public FileService(IRepository repository, IWebHostEnvironment webHostEnvironment, ScryptEncoder scryptEncoder, IConfiguration configuration)
+    public FileService(IRepository repository, IWebHostEnvironment webHostEnvironment, ScryptEncoder scryptEncoder, IConfiguration configuration, IMapper mapper)
     {
         _repository = repository;
         _webHostEnvironment = webHostEnvironment;
         _scryptEncoder = scryptEncoder;
         _timeInterval = configuration.GetValue<int>("Time:Day");
+        _mapper = mapper;
     }
 
-    public async Task<string> SaveAsync(UploadFileDto uploadFile, CancellationToken cancellationToken)
+    public async Task<UploadFileResponse> SaveAsync(UploadFileDto uploadFile, CancellationToken cancellationToken)
     {
         var uniqueName = $"{Cuid.NewCuid()}_{uploadFile.File.FileName.Replace(" ", "_")}";
         var path = Path.Combine(_webHostEnvironment.WebRootPath, uniqueName);
@@ -41,7 +46,9 @@ public class FileService : IFileService
 
         await _repository.SaveAsync(file, cancellationToken);
 
-        return uniqueName;
+        var uploadFileResponse = _mapper.Map<UploadFileResponse>(file);
+
+        return uploadFileResponse;
     }
 
     public async Task<FileDto> GetAsync(string fileName, CancellationToken cancellationToken)

@@ -28,9 +28,9 @@ public class FileController : ControllerBase
         var uploadFileDto = _mapper.Map<UploadFileDto>(uploadFileRequest);
         var uniqueFileName = await _fileService.SaveAsync(uploadFileDto, cancellationToken);
 
-        var response = new Response<string>
-        {              
-            Data = $"File name:{uniqueFileName}"
+        var response = new Response<UploadFileResponse>
+        {
+            Data = uniqueFileName
         };
 
         return CreatedAtAction(nameof(UploadFile), response);
