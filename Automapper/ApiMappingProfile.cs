@@ -3,12 +3,11 @@ using FileService.Models;
 using FileService.Models.Dtos;
 using FileService.Models.Requests;
 using FileService.Models.Responses;
-using FileService.Models.UploadFileDto;
 
 namespace FileService.Automapper;
-public class MapFile : Profile
+public class ApiMappingProfile : Profile
 {
-    public MapFile()
+    public ApiMappingProfile()
     {
         CreateMap<UploadFileRequest, UploadFileDto>();
         CreateMap<DeleteFileRequest, DeleteFileDto>();

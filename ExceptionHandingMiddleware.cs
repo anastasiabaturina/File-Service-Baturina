@@ -39,7 +39,7 @@ public class ExceptionHandingMiddleware
     }
 
     private static Task HandleExceptionAsync(HttpContext context, HttpStatusCode code, string errorMessage)
-    {     
+    {
         var response = new Response<object>
         {
             Data = null,
@@ -50,8 +50,6 @@ public class ExceptionHandingMiddleware
             }
         };
 
-        context.Response.ContentType = "application/json";
-        context.Response.StatusCode = (int)code;
         return context.Response.WriteAsJsonAsync(response);
     }
 }

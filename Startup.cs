@@ -29,7 +29,7 @@ public class Startup
         services.AddScoped<IRepository, Repository>();
         services.AddSingleton<ScryptEncoder>();
         services.AddHostedService<FileCleanupService>();
-        services.AddAutoMapper(typeof(MapFile));
+        services.AddAutoMapper(typeof(ApiMappingProfile));
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
