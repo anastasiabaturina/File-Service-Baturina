@@ -1,8 +1,7 @@
 ﻿using FileService.Models;
 using Scrypt;  
 using Visus.Cuid;
-using FileService.Models.UploadFileDto;
-using FileService.Models.Dto_s;
+using FileService.Models.Dtos;
 using FileService.Models.Response;
 using AutoMapper;
 

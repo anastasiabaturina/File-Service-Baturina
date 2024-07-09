@@ -1,4 +1,4 @@
-﻿namespace FileService.Models.Dto_s;
+﻿namespace FileService.Models.Dtos;
 
 public class FileDto
 {

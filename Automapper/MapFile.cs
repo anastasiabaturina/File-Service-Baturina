@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using FileService.Models;
-using FileService.Models.Dto_s;
+using FileService.Models.Dtos;
 using FileService.Models.Request;
 using FileService.Models.Response;
 using FileService.Models.UploadFileDto;

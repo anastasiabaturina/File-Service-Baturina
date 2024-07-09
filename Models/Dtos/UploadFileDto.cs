@@ -1,4 +1,4 @@
-﻿namespace FileService.Models.UploadFileDto;
+﻿namespace FileService.Models.Dtos;
 
 public class UploadFileDto
 {
