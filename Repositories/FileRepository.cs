@@ -35,6 +35,5 @@ public class FileRepository : IFileRepository
     {
         await _context.Files.Where(f => f.UploadDateTime < timeInterval)
             .ExecuteDeleteAsync(cancellationToken);
-        await _context.SaveChangesAsync();
     }
 }
