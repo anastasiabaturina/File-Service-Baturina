@@ -9,13 +9,13 @@ namespace FileService.Services;
 
 public class FileService : IFileService
 {
-    private readonly IRepository _repository;
+    private readonly IFileRepository _repository;
     private readonly IWebHostEnvironment _webHostEnvironment;
     private readonly ScryptEncoder _scryptEncoder;
     private readonly int _timeInterval;
     private readonly IMapper _mapper;
 
-    public FileService(IRepository repository, IWebHostEnvironment webHostEnvironment, ScryptEncoder scryptEncoder, IConfiguration configuration, IMapper mapper)
+    public FileService(IFileRepository repository, IWebHostEnvironment webHostEnvironment, ScryptEncoder scryptEncoder, IConfiguration configuration, IMapper mapper)
     {
         _repository = repository;
         _webHostEnvironment = webHostEnvironment;
@@ -99,7 +99,7 @@ public class FileService : IFileService
             throw new ArgumentException("Invalid password");
         }
 
-        await _repository.DeleteAsync(deleteFileDto.UniqueName, cancellationToken);
+        await _repository.DeleteAsync(document, cancellationToken);
 
         var filePath = Path.Combine(_webHostEnvironment.WebRootPath, deleteFileDto.UniqueName);
 

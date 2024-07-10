@@ -12,9 +12,9 @@ public class FileRepository : IFileRepository
         _context = context;
     }
 
-    public async Task SaveAsync(Document file, CancellationToken cancellationToken)
+    public async Task SaveAsync(Document document, CancellationToken cancellationToken)
     {
-        await _context.Files.AddAsync(file, cancellationToken);
+        await _context.Files.AddAsync(document, cancellationToken);
         await _context.SaveChangesAsync(cancellationToken); 
     }
 
@@ -25,12 +25,10 @@ public class FileRepository : IFileRepository
         return file;
     }
 
-    public async Task DeleteAsync(string uniqueName, CancellationToken cancellationToken)
+    public async Task DeleteAsync(Document document, CancellationToken cancellationToken)
     {
-        var file = await _context.Files.FirstOrDefaultAsync(x => x.UniqueName == uniqueName, cancellationToken);
-
-        _context.Files.Remove(file);
-        await _context.SaveChangesAsync();
+        _context.Files.Remove(document);
+        await _context.SaveChangesAsync(cancellationToken);
     }
 
     public async Task DeleteFilesByDateTimeAsync(DateTime timeInterval, CancellationToken cancellationToken)
