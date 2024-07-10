@@ -3,6 +3,7 @@
 public class Document
 {
     public Guid Id { get; set; }
+
     public string? UniqueName { get; set; }
 
     public string? Path { get; set; }

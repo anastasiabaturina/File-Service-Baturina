@@ -1,7 +1,7 @@
 ﻿using FileService.Models.Responses;
 using System.Net;
 
-namespace FileService;
+namespace FileService.Middleware;
 
 public class ExceptionHandingMiddleware
 {
@@ -18,13 +18,13 @@ public class ExceptionHandingMiddleware
         {
             await _next(context);
         }
-        catch(ArgumentException ex)
+        catch (ArgumentException ex)
         {
             var code = HttpStatusCode.BadRequest;
             var errorMessage = ex.Message;
             await HandleExceptionAsync(context, code, errorMessage);
         }
-        catch(FileNotFoundException)
+        catch (FileNotFoundException)
         {
             var code = HttpStatusCode.NotFound;
             var errorMessage = "File not found.";

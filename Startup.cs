@@ -1,5 +1,6 @@
 ﻿using DotNetEnv;
 using FileService.Automapper;
+using FileService.Middleware;
 using FileService.Services;
 using Microsoft.EntityFrameworkCore;
 using Scrypt;
