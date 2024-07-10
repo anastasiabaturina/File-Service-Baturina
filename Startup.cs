@@ -27,7 +27,7 @@ public class Startup
 
         services.AddDbContext<DocumentContext>(options => options.UseNpgsql(connection));
         services.AddScoped<IFileService, Services.FileService>();
-        services.AddScoped<IRepository, Repository>();
+        services.AddScoped<IRepository, FileRepository>();
         services.AddSingleton<ScryptEncoder>();
         services.AddHostedService<FileCleanupService>();
         services.AddAutoMapper(typeof(ApiMappingProfile));

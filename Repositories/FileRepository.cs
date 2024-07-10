@@ -3,11 +3,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FileService;
 
-public class Repository : IRepository
+public class FileRepository : IFileRepository
 {
     private readonly DocumentContext _context;
 
-    public Repository(DocumentContext context, IConfiguration configuration)
+    public FileRepository(DocumentContext context, IConfiguration configuration)
     {
         _context = context;
     }
@@ -15,17 +15,12 @@ public class Repository : IRepository
     public async Task SaveAsync(Document file, CancellationToken cancellationToken)
     {
         await _context.Files.AddAsync(file, cancellationToken);
-        await _context.SaveChangesAsync(); 
+        await _context.SaveChangesAsync(cancellationToken); 
     }
 
     public async Task<Document> GetAsync(string uniqueName, CancellationToken cancellationToken)
     {
         var file = await _context.Files.FirstOrDefaultAsync(x => x.UniqueName == uniqueName, cancellationToken);
-
-        if (file == null)
-        {
-            throw new FileNotFoundException();
-        }
 
         return file;
     }
@@ -33,11 +28,6 @@ public class Repository : IRepository
     public async Task DeleteAsync(string uniqueName, CancellationToken cancellationToken)
     {
         var file = await _context.Files.FirstOrDefaultAsync(x => x.UniqueName == uniqueName, cancellationToken);
-
-        if (file == null)
-        {
-            throw new FileNotFoundException();
-        }
 
         _context.Files.Remove(file);
         await _context.SaveChangesAsync();

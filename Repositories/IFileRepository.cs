@@ -2,7 +2,7 @@
 
 namespace FileService;
 
-public interface IRepository
+public interface IFileRepository
 {
     Task SaveAsync(Document file, CancellationToken cancellationToken);
 
