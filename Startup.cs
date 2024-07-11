@@ -1,5 +1,6 @@
 ﻿using DotNetEnv;
 using FileService.Automapper;
+using FileService.Configuration;
 using FileService.Middleware;
 using FileService.Services;
 using Microsoft.EntityFrameworkCore;
@@ -21,6 +22,7 @@ public class Startup
         Env.Load(".env");
         var connection = Environment.GetEnvironmentVariable("DATABASE");
 
+        services.Configure<TimeSettings>(Configuration.GetSection("Time"));
         services.AddControllers();
         services.AddEndpointsApiExplorer();
         services.AddSwaggerGen();

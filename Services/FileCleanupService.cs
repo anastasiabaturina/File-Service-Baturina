@@ -1,14 +1,16 @@
-﻿namespace FileService.Services;
+﻿using FileService.Configuration;
+using Microsoft.Extensions.Options;
+
+namespace FileService.Services;
 
 public class FileCleanupService : BackgroundService
 {
     private readonly IServiceScopeFactory _serviceScopeFactory;
-    private readonly int _timeInterval;
+    private readonly TimeSettings _timeSettings;
 
-
-    public FileCleanupService(IConfiguration configuration, IServiceScopeFactory serviceScopeFactory)
+    public FileCleanupService(IOptions<TimeSettings> timeSettings, IServiceScopeFactory serviceScopeFactory)
     {
-        _timeInterval = configuration.GetValue<int>("Time:Day");
+        _timeSettings = timeSettings.Value;
         _serviceScopeFactory = serviceScopeFactory;
     }
 
@@ -20,7 +22,7 @@ public class FileCleanupService : BackgroundService
             var serviceFile = scope.ServiceProvider.GetRequiredService<IFileService>();
             await serviceFile.AutoDeleteFilesAsync(cancellationToken);
 
-            await Task.Delay(TimeSpan.FromDays(_timeInterval), cancellationToken);
+            await Task.Delay(TimeSpan.FromDays(_timeSettings.Day), cancellationToken);
         }
-    }
+    }     
 }

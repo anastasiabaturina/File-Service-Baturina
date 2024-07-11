@@ -4,6 +4,8 @@ using Visus.Cuid;
 using FileService.Models.Dtos;
 using FileService.Models.Responses;
 using AutoMapper;
+using FileService.Configuration;
+using Microsoft.Extensions.Options;
 
 namespace FileService.Services;
 
@@ -12,16 +14,16 @@ public class FileService : IFileService
     private readonly IFileRepository _repository;
     private readonly IWebHostEnvironment _webHostEnvironment;
     private readonly ScryptEncoder _scryptEncoder;
-    private readonly int _timeInterval;
     private readonly IMapper _mapper;
+    private readonly TimeSettings _timeSettings;
 
-    public FileService(IFileRepository repository, IWebHostEnvironment webHostEnvironment, ScryptEncoder scryptEncoder, IConfiguration configuration, IMapper mapper)
+    public FileService(IFileRepository repository, IWebHostEnvironment webHostEnvironment, ScryptEncoder scryptEncoder, IMapper mapper, IOptions<TimeSettings> timeSettings)
     {
         _repository = repository;
         _webHostEnvironment = webHostEnvironment;
         _scryptEncoder = scryptEncoder;
-        _timeInterval = configuration.GetValue<int>("Time:Day");
         _mapper = mapper;
+        _timeSettings = timeSettings.Value;
     }
 
     public async Task<UploadFileResponse> SaveAsync(UploadFileDto uploadFile, CancellationToken cancellationToken)
@@ -100,7 +102,7 @@ public class FileService : IFileService
     {
         var directoryPath = Path.Combine(_webHostEnvironment.WebRootPath);
         var directory = new DirectoryInfo(directoryPath);
-        var dateTimeInterval = DateTime.UtcNow.AddDays(-_timeInterval);
+        var dateTimeInterval = DateTime.UtcNow.AddDays(-_timeSettings.Day);
 
         await _repository.DeleteFilesByDateTimeAsync(dateTimeInterval, cancellationToken);
 
