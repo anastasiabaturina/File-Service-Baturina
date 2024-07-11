@@ -14,7 +14,7 @@ public class FileRepository : IFileRepository
 
     public async Task SaveAsync(Document document, CancellationToken cancellationToken)
     {
-        await _context.Files.AddAsync(document, cancellationToken);
+        _context.Files.Add(document);
         await _context.SaveChangesAsync(cancellationToken); 
     }
 
