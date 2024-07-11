@@ -3,7 +3,9 @@ using FileService.Models.Dtos;
 using FileService.Models.Requests;
 using FileService.Models.Responses;
 using FileService.Services;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
+using System.IO;
 
 
 namespace FileService.Controllers;
@@ -40,7 +42,7 @@ public class FileController : ControllerBase
     {
         var fileDto = await _fileService.GetAsync(fileName, cancellationToken);
 
-        return File(fileDto.Content, fileDto.ContentType, fileDto.FileName);
+        return File(fileDto, System.Net.Mime.MediaTypeNames.Application.Octet, fileName);
     }
 
     [HttpDelete]

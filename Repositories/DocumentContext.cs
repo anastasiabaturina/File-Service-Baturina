@@ -30,7 +30,6 @@ public class DocumentContext : DbContext
                 .IsRequired();
 
             entity.Property(e => e.Password)
-                .IsRequired()
                 .HasMaxLength(100);
         });
     }

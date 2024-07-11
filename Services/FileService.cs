@@ -49,7 +49,7 @@ public class FileService : IFileService
         return uploadFileResponse;
     }
 
-    public async Task<FileDto> GetAsync(string fileName, CancellationToken cancellationToken)
+    public async Task<Stream> GetAsync(string fileName, CancellationToken cancellationToken)
     {
         if (string.IsNullOrEmpty(fileName))
         {
@@ -64,20 +64,9 @@ public class FileService : IFileService
         }
 
         var filePath = Path.Combine(_webHostEnvironment.WebRootPath, fileName);
+        var fileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read, 4096, useAsync: true);
 
-        byte[] fileBytes;
-        await using (var stream = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read, 4096, useAsync: true))
-        {
-            fileBytes = new byte[stream.Length];
-            await stream.ReadAsync(fileBytes, 0, (int)stream.Length);
-        }
-
-        return new FileDto
-        {
-            FileName = fileName,
-            Content = fileBytes,
-            ContentType = System.Net.Mime.MediaTypeNames.Application.Octet
-        };
+        return fileStream;
     }
 
     public async Task DeleteAsync(DeleteFileDto deleteFileDto, CancellationToken cancellationToken)
