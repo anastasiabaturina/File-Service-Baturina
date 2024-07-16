@@ -22,7 +22,7 @@ public class Startup
         Env.Load(".env");
         var connection = Environment.GetEnvironmentVariable("DATABASE");
 
-        services.Configure<TimeSettings>(Configuration.GetSection("Time"));
+        services.Configure<FileCleanupSettings>(Configuration.GetSection("Time"));
         services.AddControllers();
         services.AddEndpointsApiExplorer();
         services.AddSwaggerGen();

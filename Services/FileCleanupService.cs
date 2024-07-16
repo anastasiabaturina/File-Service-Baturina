@@ -6,9 +6,9 @@ namespace FileService.Services;
 public class FileCleanupService : BackgroundService
 {
     private readonly IServiceScopeFactory _serviceScopeFactory;
-    private readonly TimeSettings _timeSettings;
+    private readonly FileCleanupSettings _timeSettings;
 
-    public FileCleanupService(IOptions<TimeSettings> timeSettings, IServiceScopeFactory serviceScopeFactory)
+    public FileCleanupService(IOptions<FileCleanupSettings> timeSettings, IServiceScopeFactory serviceScopeFactory)
     {
         _timeSettings = timeSettings.Value;
         _serviceScopeFactory = serviceScopeFactory;

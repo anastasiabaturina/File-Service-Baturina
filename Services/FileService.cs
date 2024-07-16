@@ -15,9 +15,9 @@ public class FileService : IFileService
     private readonly IWebHostEnvironment _webHostEnvironment;
     private readonly ScryptEncoder _scryptEncoder;
     private readonly IMapper _mapper;
-    private readonly TimeSettings _timeSettings;
+    private readonly FileCleanupSettings _timeSettings;
 
-    public FileService(IFileRepository repository, IWebHostEnvironment webHostEnvironment, ScryptEncoder scryptEncoder, IMapper mapper, IOptions<TimeSettings> timeSettings)
+    public FileService(IFileRepository repository, IWebHostEnvironment webHostEnvironment, ScryptEncoder scryptEncoder, IMapper mapper, IOptions<FileCleanupSettings> timeSettings)
     {
         _repository = repository;
         _webHostEnvironment = webHostEnvironment;

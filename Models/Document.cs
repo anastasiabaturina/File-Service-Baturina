@@ -11,6 +11,4 @@ public class Document
     public DateTime UploadDateTime { get; set; }
 
     public string? Password { get; set; }
-
 }
-
